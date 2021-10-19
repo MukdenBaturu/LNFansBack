@@ -16,6 +16,7 @@ const auth = require('../middleware/auth');
 const multer = require('multer')
 const path = require('path');
 const fs = require('fs');
+const sequelize = require("../db/dbconnection")
 
 const sd = require('silly-datetime');
 
@@ -217,6 +218,37 @@ router.post('/addimg', uploader.single('img'), function (req, res, next) {
     console.log('here')
     res.json({
         picUrl: 'http://localhost:3000/imgs/article?img=' + file.filename
+    })
+})
+
+router.post('/delete', function (req, res, next) {
+    if (req.body.author !== req.body.username) {
+        console.log(req.body.author + ' ' + req.body.username)
+        res.json({
+            status: "fail",
+            msg: "别跟我瞎胡闹奥"
+        })
+        return
+    }
+    console.log('into delete')
+
+    sequelize.transaction({ autocommit: true }, (t) => {
+        return Promise.all([
+            Article.destroy({
+                where: {
+                    articleId: req.body.articleId
+                }
+            }),
+            ArticleLabel.destroy({
+                where: {
+                    articleId: req.body.articleId
+                }
+            })
+        ])
+    }).then(() => {
+        res.json({
+            status: "success"
+        })
     })
 })
 
