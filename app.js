@@ -12,6 +12,7 @@ var usersRouter = require('./routes/users');
 var articleRouter = require('./routes/article')
 var imgRouter = require('./routes/img')
 var matchRouter = require('./routes/match')
+var labelRouter = require('./routes/label')
 
 var RSA = require('./utils/rsa');
 
@@ -66,6 +67,7 @@ app.use('/user', usersRouter);
 app.use('/article', articleRouter);
 app.use('/imgs', imgRouter)
 app.use('/match', matchRouter)
+app.use('/label', labelRouter)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
